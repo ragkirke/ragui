@@ -11,7 +11,14 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
- import { Link, NavLink } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
+import AuthContext from '../../context/AuthProvider';
+import { useRef, useState, useEffect, useContext } from 'react';
+import axios from '../../api/axios';
+import { useNavigate } from 'react-router-dom';
+
+const LOGIN_URL = '/auth';
+
 
 // function Copyright(props) {
 //   return (
@@ -34,6 +41,11 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 const theme = createTheme();
 
 export default function SignIn() {
+
+  const { setAuth } = useContext(AuthContext);
+
+  const navigate = useNavigate();
+
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -41,6 +53,38 @@ export default function SignIn() {
       email: data.get('email'),
       password: data.get('password'),
     });
+
+    try {
+
+      const reponse = axios.post(LOGIN_URL, JSON.stringify({
+        email: data.get('email'),
+        password: data.get('password'),
+      }), {
+        headers: { 'Content-Type': 'application/json' },
+        withCredentials: false
+      }
+      );
+
+
+      reponse.then(function (result) {
+        console.log(result);
+        console.log(JSON.stringify(result.data));
+
+
+        console.log(result.data.status)
+
+        if (result.data.status === "success")
+          navigate('/landing');
+        else
+          navigate('/');
+
+      })
+
+
+    } catch (err) {
+
+    }
+
   };
 
   return (
@@ -107,9 +151,9 @@ export default function SignIn() {
               </Grid>
               <Grid item>
                 <Box>
-                <Link to="/signup" variant="body2">
-                  <Button variant='text'>{"Don't have an account? Sign Up"}</Button>
-                </Link>
+                  <Link to="/signup" variant="body2">
+                    <Button variant='text'>{"Don't have an account? Sign Up"}</Button>
+                  </Link>
                 </Box>
               </Grid>
             </Grid>
