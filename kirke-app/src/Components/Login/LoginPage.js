@@ -76,13 +76,13 @@ export default function SignIn() {
         if (result.data.status === "success")
           navigate('/landing');
         else
-          navigate('/');
+          navigate('/error');
 
       })
 
 
     } catch (err) {
-
+      navigate('/error');
     }
 
   };
