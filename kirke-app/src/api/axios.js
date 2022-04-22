@@ -4,7 +4,7 @@ export default axios.create({
     baseURL: 'http://localhost:8080'
 });
 
-axios.interceptors. response.use(response=>{
+axios.interceptors.response.use(response=>{
     //add logic here on the coming response
     console.log("after response !!!")
     return response;

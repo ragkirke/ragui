@@ -13,7 +13,7 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Link, NavLink } from 'react-router-dom';
 import AuthContext from '../../context/AuthProvider';
-import { useRef, useState, useEffect, useContext } from 'react';
+import { useRef, useState, useEffect, useContext , route} from 'react';
 import axios from '../../api/axios';
 import { useNavigate } from 'react-router-dom';
 
@@ -39,10 +39,15 @@ const LOGIN_URL = '/auth';
 // }
 
 const theme = createTheme();
+const state = {};
+const flag = {};
 
 export default function SignIn() {
 
   const { setAuth } = useContext(AuthContext);
+  const [flag] = useState();
+
+ 
 
   const navigate = useNavigate();
 
@@ -65,24 +70,43 @@ export default function SignIn() {
       }
       );
 
-
       reponse.then(function (result) {
         console.log(result);
         console.log(JSON.stringify(result.data));
 
-
         console.log(result.data.status)
-
-        if (result.data.status === "success")
+        if (result.data.status === "success"){
           navigate('/landing');
-        else
-          navigate('/error');
-
-      })
+          setAuth(true)
+          state.flag= 1; 
+        }
+        else{
+          navigate('/');
+          setAuth(false)
+          state.flag= 2;
+        }  
+      }).catch(function (error) {
+        if (error.response) {
+          // Request made and server responded
+          console.log(error.response.data);
+          console.log(error.response.status);
+          console.log(error.response.headers);
+        } else if (error.request) {
+          // The request was made but no response was received
+          console.log(error.request);
+          state.flag= 3;  
+          navigate('/');
+        } else {
+          // Something happened in setting up the request that triggered an Error
+          console.log('Error', error.message);
+        }
+    
+      });
 
 
     } catch (err) {
-      navigate('/error');
+      console.log(err);
+      navigate('/');
     }
 
   };
@@ -105,6 +129,11 @@ export default function SignIn() {
           <Typography component="h1" variant="h5">
             Sign in
           </Typography>
+
+
+          { state.flag === 2 && <p style={{ color: 'red' }}>UserName or Password is wrong !!</p>}
+          { state.flag === 3 && <p style={{ color: 'red' }}>Could Not Authenticate, please try again.</p>}
+
           <Box
             component="form"
             onSubmit={handleSubmit}

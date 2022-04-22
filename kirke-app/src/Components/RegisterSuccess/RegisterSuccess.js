@@ -12,28 +12,9 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Link } from 'react-router-dom';
-import { Admin, CustomRoutes, useAuthenticated } from 'react-admin';
 
-// function Copyright(props) {
-//   return (
-//     <Typography variant="body2" color="text.secondary" align="center" {...props}>
-//       {'Copyright © '}
-//       <Link color="inherit" href="https://mui.com/">
-//         Your Website
-//       </Link>{' '}
-//       {new Date().getFullYear()}
-//       {'.'}
-//     </Typography>
-//   );
-// }
 
 const theme = createTheme();
-
-
-
-const MyPage = () => {
-    useAuthenticated(); // redirects to login if not authenticated
-}
 
 export default function SignUp() {
   const handleSubmit = (event) => {
@@ -46,6 +27,7 @@ export default function SignUp() {
   };
 
   return (
-   <h1> Dashboard Page </h1>
+   <p> Your Registration was successfull go back to  <Link to="/">SignIn Page</Link>
+   </p>
   );
 }

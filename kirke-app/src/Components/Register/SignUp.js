@@ -12,7 +12,13 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Link } from 'react-router-dom';
+import AuthContext from '../../context/AuthProvider';
+import { useRef, useState, useEffect, useContext } from 'react';
+import axios from '../../api/axios';
+import { useNavigate } from 'react-router-dom';
+import SignIn from '../Login/LoginPage';
 
+const REG_URL = '/register';
 // function Copyright(props) {
 //   return (
 //     <Typography variant="body2" color="text.secondary" align="center" {...props}>
@@ -27,8 +33,14 @@ import { Link } from 'react-router-dom';
 // }
 
 const theme = createTheme();
+const state = {};
 
 export default function SignUp() {
+
+  const { setAuth } = useContext(AuthContext);
+  const [flag] = useState();
+  const navigate = useNavigate();
+
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -36,6 +48,58 @@ export default function SignUp() {
       email: data.get('email'),
       password: data.get('password'),
     });
+
+
+
+    try {
+
+      const reponse = axios.post(REG_URL, JSON.stringify({
+        email: data.get('email'),
+        password: data.get('password'),
+        lastName: data.get('lastName'),
+        firstName: data.get('firstName'),
+        confirmPassword: data.get('cpassword'),
+      }), {
+        headers: { 'Content-Type': 'application/json' },
+        withCredentials: false
+      }
+      );
+
+      reponse.then(function (result) {
+        console.log(result);
+        console.log(JSON.stringify(result.data));
+
+        console.log(result.data.status)
+        if (result.data.status === "success"){      
+          navigate('/regsuccess');
+        }
+        else{
+          navigate('/error');
+          setAuth(false)
+        }  
+      }).catch(function (error) {
+        if (error.response) {
+          // Request made and server responded
+          console.log(error.response.data);
+          console.log(error.response.status);
+          console.log(error.response.headers);
+        } else if (error.request) {
+          // The request was made but no response was received
+          console.log(error.request);
+          navigate('/error');
+        } else {
+          // Something happened in setting up the request that triggered an Error
+          console.log('Error', error.message);
+        }
+    
+      });
+
+
+    } catch (err) {
+      console.log(err);
+      navigate('/');
+    }
+
   };
 
   return (
@@ -57,15 +121,32 @@ export default function SignUp() {
             Sign up
           </Typography>
           <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
+
+
+          { state.flag === 2 && <p style={{ color: 'red' }}>Registration Failed !!</p>}
+          { state.flag === 3 && <p style={{ color: 'red' }}>Could Not Register, please try again.</p>}
+
             <Grid container spacing={2}>
               <Grid item xs={12}>
                 <TextField
                   autoComplete="employee-name"
-                  name="userName"
+                  name="firstName"
                   required
                   fullWidth
-                  id="userName"
-                  label="User Name"
+                  id="firstName"
+                  label="First Name"
+                  autoFocus
+                />
+              </Grid>
+
+              <Grid item xs={12}>
+                <TextField
+                  autoComplete="employee-name"
+                  name="lastName"
+                  required
+                  fullWidth
+                  id="lastName"
+                  label="Last Name"
                   autoFocus
                 />
               </Grid>
@@ -89,6 +170,18 @@ export default function SignUp() {
                   type="password"
                   id="password"
                   autoComplete="new-password"
+                />
+              </Grid>
+
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  name="cpassword"
+                  label="Confirm Password"
+                  type="password"
+                  id="cpassword"
+                  autoComplete="confirm-password"
                 />
               </Grid>
               {/* <Grid item xs={12}>
