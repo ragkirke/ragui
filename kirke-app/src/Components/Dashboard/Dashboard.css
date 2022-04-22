@@ -1,0 +1,43 @@
+.ag-theme-alpine .ag-ltr .ag-cell {
+    border-right: 1px solid #aaa !important;
+  }
+  
+  .ag-header-cell {
+    border-style: solid!important;
+    border-width: 0 0 1px 1px!important;
+    background-color: #0072c5;
+    color: #fff!important;
+    font-weight: 700;
+    text-align: center!important;
+  }
+  
+  .ag-header-cell-label {
+    justify-content: center;
+  }
+  
+  .ag-row-group {
+    background-color: #eae8e8;
+  }
+  
+  div[row-id*=rowGroupFooter] {
+    font-weight: 650;
+  }
+  .agGridHeight {
+  height: calc(100vh - 100px);
+  padding: 15px;
+  }
+  .react-date-picker__inputGroup{
+    background-color: #0072c5;
+  }
+  .react-date-picker__inputGroup__input {
+    color: white;
+  }
+  .react-date-picker__button:enabled {
+    background: #0072c5;
+}
+.react-date-picker__button svg {
+  stroke: white;
+}
+.DashboardMainDiv{
+  width: 100%;
+}
