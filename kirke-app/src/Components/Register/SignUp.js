@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -11,23 +11,17 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { Link, NavLink } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import AuthContext from '../../context/AuthProvider';
-import { useRef, useState, useEffect, useContext , route} from 'react';
+import { useRef, useState, useEffect, useContext } from 'react';
 import axios from '../../api/axios';
 import { useNavigate } from 'react-router-dom';
+import SignIn from '../Login/LoginPage';
 
-const LOGIN_URL = '/auth';
-
-
+const REG_URL = '/register';
 // function Copyright(props) {
 //   return (
-//     <Typography
-//       variant="body2"
-//       color="text.secondary"
-//       align="center"
-//       {...props}
-//     >
+//     <Typography variant="body2" color="text.secondary" align="center" {...props}>
 //       {'Copyright © '}
 //       <Link color="inherit" href="https://mui.com/">
 //         Your Website
@@ -40,15 +34,11 @@ const LOGIN_URL = '/auth';
 
 const theme = createTheme();
 const state = {};
-const flag = {};
 
-export default function SignIn() {
+export default function SignUp() {
 
   const { setAuth } = useContext(AuthContext);
   const [flag] = useState();
-
- 
-
   const navigate = useNavigate();
 
   const handleSubmit = (event) => {
@@ -59,11 +49,16 @@ export default function SignIn() {
       password: data.get('password'),
     });
 
+
+
     try {
 
-      const reponse = axios.post(LOGIN_URL, JSON.stringify({
+      const reponse = axios.post(REG_URL, JSON.stringify({
         email: data.get('email'),
         password: data.get('password'),
+        lastName: data.get('lastName'),
+        firstName: data.get('firstName'),
+        confirmPassword: data.get('cpassword'),
       }), {
         headers: { 'Content-Type': 'application/json' },
         withCredentials: false
@@ -75,15 +70,12 @@ export default function SignIn() {
         console.log(JSON.stringify(result.data));
 
         console.log(result.data.status)
-        if (result.data.status === "success"){
-          navigate('/landing');
-          setAuth(true)
-          state.flag= 1; 
+        if (result.data.status === "success"){      
+          navigate('/regsuccess');
         }
         else{
-          navigate('/');
+          navigate('/error');
           setAuth(false)
-          state.flag= 2;
         }  
       }).catch(function (error) {
         if (error.response) {
@@ -94,8 +86,7 @@ export default function SignIn() {
         } else if (error.request) {
           // The request was made but no response was received
           console.log(error.request);
-          state.flag= 3;  
-          navigate('/');
+          navigate('/error');
         } else {
           // Something happened in setting up the request that triggered an Error
           console.log('Error', error.message);
@@ -127,68 +118,97 @@ export default function SignIn() {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Sign in
+            Sign up
           </Typography>
+          <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
 
 
-          { state.flag === 2 && <p style={{ color: 'red' }}>UserName or Password is wrong !!</p>}
-          { state.flag === 3 && <p style={{ color: 'red' }}>Could Not Authenticate, please try again.</p>}
+          { state.flag === 2 && <p style={{ color: 'red' }}>Registration Failed !!</p>}
+          { state.flag === 3 && <p style={{ color: 'red' }}>Could Not Register, please try again.</p>}
 
-          <Box
-            component="form"
-            onSubmit={handleSubmit}
-            noValidate
-            sx={{ mt: 1 }}
-          >
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              id="email"
-              label="Email Address"
-              name="email"
-              autoComplete="email"
-              autoFocus
-            />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="password"
-              label="Password"
-              type="password"
-              id="password"
-              autoComplete="current-password"
-            />
-            <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
-            />
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <TextField
+                  autoComplete="employee-name"
+                  name="firstName"
+                  required
+                  fullWidth
+                  id="firstName"
+                  label="First Name"
+                  autoFocus
+                />
+              </Grid>
+
+              <Grid item xs={12}>
+                <TextField
+                  autoComplete="employee-name"
+                  name="lastName"
+                  required
+                  fullWidth
+                  id="lastName"
+                  label="Last Name"
+                  autoFocus
+                />
+              </Grid>
+              
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  id="email"
+                  label="Email Address"
+                  name="email"
+                  autoComplete="email"
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  name="password"
+                  label="Password"
+                  type="password"
+                  id="password"
+                  autoComplete="new-password"
+                />
+              </Grid>
+
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  name="cpassword"
+                  label="Confirm Password"
+                  type="password"
+                  id="cpassword"
+                  autoComplete="confirm-password"
+                />
+              </Grid>
+              {/* <Grid item xs={12}>
+                <FormControlLabel
+                  control={<Checkbox value="allowExtraEmails" color="primary" />}
+                  label="I want to receive inspiration, marketing promotions and updates via email."
+                />
+              </Grid> */}
+            </Grid>
             <Button
               type="submit"
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
-              Sign In
+              Sign Up
             </Button>
-            <Grid container>
-              <Grid item xs>
-                <Link to="#" variant="body2">
-                  Forgot password?
-                </Link>
-              </Grid>
+            <Grid container justifyContent="flex-end">
               <Grid item>
-                <Box>
-                  <Link to="/signup" variant="body2">
-                    <Button variant='text'>{"Don't have an account? Sign Up"}</Button>
-                  </Link>
-                </Box>
+                <Link to="/" variant="body2">
+                  Already have an account? Sign in
+                </Link>
               </Grid>
             </Grid>
           </Box>
         </Box>
-        {/* <Copyright sx={{ mt: 8, mb: 4 }} /> */}
+        {/* <Copyright sx={{ mt: 5 }} /> */}
       </Container>
     </ThemeProvider>
   );
