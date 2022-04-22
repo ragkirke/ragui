@@ -16,6 +16,7 @@ import AuthContext from '../../context/AuthProvider';
 import { useRef, useState, useEffect, useContext , route} from 'react';
 import axios from '../../api/axios';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/AuthProvider';
 
 const LOGIN_URL = '/auth';
 
@@ -44,10 +45,10 @@ const flag = {};
 
 export default function SignIn() {
 
-  const { setAuth } = useContext(AuthContext);
-  const [flag] = useState();
+  const [user, setUser] = useState('');
 
- 
+
+  const auth = useAuth();
 
   const navigate = useNavigate();
 
@@ -76,13 +77,12 @@ export default function SignIn() {
 
         console.log(result.data.status)
         if (result.data.status === "success"){
+          auth.login(user);
           navigate('/landing');
-          setAuth(true)
           state.flag= 1; 
         }
         else{
           navigate('/');
-          setAuth(false)
           state.flag= 2;
         }  
       }).catch(function (error) {
