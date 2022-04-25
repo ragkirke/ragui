@@ -12,6 +12,7 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Link } from 'react-router-dom';
+import './Error.css';
 
 // function Copyright(props) {
 //   return (
@@ -39,6 +40,10 @@ export default function SignUp() {
   };
 
   return (
-   <h1> ERROR PAGE </h1>
+    <div className="container">
+      <h1>404</h1>
+      <h2>Page Not Found</h2>
+      <p>The Page you are looking for doesn't exist or an other error occured.</p>
+    </div>
   );
 }
