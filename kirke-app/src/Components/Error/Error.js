@@ -29,16 +29,8 @@ import './Error.css';
 
 const theme = createTheme();
 
-export default function SignUp() {
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
-  };
-
+export default function Error() {
+ 
   return (
     <div className="container">
       <h1>404</h1>

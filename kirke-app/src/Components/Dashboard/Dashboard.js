@@ -3,24 +3,84 @@ import { render } from 'react-dom';
 import "./Dashboard.css"
 import DatePicker from 'react-date-picker';
 import { AgGridReact } from 'ag-grid-react'; // the AG Grid React Component
+import AuthContext from '../../context/AuthProvider';
+
+import axios from '../../api/axios';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/AuthProvider';
 
 import 'ag-grid-community/dist/styles/ag-grid.css'; // Core grid CSS, always needed
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css'; // Optional theme CSS
 
+const GETDATA_URL = "/getData";
 
-const DashboardPage = () => {
+const DashboardPage = (e) => {
+
+
+    const [user, setUser] = useState('');
+
+    const auth = useAuth();
+  
+    const navigate = useNavigate();
+
     const [value, onChange] = useState(new Date());
     const gridRef = useRef(); // Optional - for accessing Grid's API
-    const [rowData] = useState([
-        { Program: "Insurance", FirstName: "Benn", LastName: "Tennyson", DOJIncedo: "4/Jan/2020", CurrentLevel: "3A", LastPromotedOn: "4/April/2022", CurrentManager: "James Sewer", RAG: "" },
-    ]);
-    //const [rowData, setRowData] = useState(); // Set rowData to Array of Objects, one Object per Row
+    
+    const [rowData, setRowData] = useState(); // Set rowData to Array of Objects, one Object per Row
+
+    useEffect(()=>{
+      
+    try {
+
+        const reponse = axios.post(GETDATA_URL, JSON.stringify({
+         month: 3,
+         year: 2022
+        }), {
+          headers: { 'Content-Type': 'application/json' },
+          withCredentials: false
+        }
+        );
+  
+        reponse.then(function (result) {
+          console.log(result);
+          console.log(JSON.stringify(result.data));
+  
+          console.log(result.data.status)
+          if (result.data.status === "success"){      
+            setRowData(result.data.ragEntryList);
+          }
+          else{
+            navigate('/error');
+          }  
+        }).catch(function (error) {
+          if (error.response) {
+            // Request made and server responded
+            console.log(error.response.data);
+            console.log(error.response.status);
+            console.log(error.response.headers);
+          } else if (error.request) {
+            // The request was made but no response was received
+            console.log(error.request);
+            navigate('/error');
+          } else {
+            // Something happened in setting up the request that triggered an Error
+            console.log('Error', error.message);
+          }
+      
+        });
+  
+  
+      } catch (err) {
+        console.log(err);
+        navigate('/');
+      }
+    }, [])
 
     // Each Column Definition results in one Column.
     const [columnDefs, setColumnDefs] = useState([
         { field: 'Program', field: "Program", filter: true, width:150 },
-        { field: 'First Name', field: "FirstName", filter: true },
-        { field: 'Last Name', field: "LastName", },
+        { field: 'First Name', field: "firstName", filter: true },
+        { field: 'Last Name', field: "lastName", },
         { field: 'DOJ-Incedo', field: "DOJIncedo", },
         { field: 'Current Level', field: "CurrentLevel", },
         { field: 'Last Promoted On', field: "LastPromotedOn", },
