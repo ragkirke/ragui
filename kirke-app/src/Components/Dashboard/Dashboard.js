@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect, useMemo, useCallback } from 'react'
 import { render } from 'react-dom';
 import "./Dashboard.css"
 import DatePicker from 'react-date-picker';
+<<<<<<< HEAD
 // import { AgGridReact } from 'ag-grid-react'; // the AG Grid React Component
 // import 'ag-grid-community/dist/styles/ag-grid.css'; // Core grid CSS, always needed
 // import 'ag-grid-community/dist/styles/ag-theme-alpine.css'; // Optional theme CSS
@@ -9,11 +10,29 @@ import DatePicker from 'react-date-picker';
 import TextField from '@mui/material/TextField';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { DataGrid } from '@mui/x-data-grid';
+=======
+import { AgGridReact } from 'ag-grid-react'; // the AG Grid React Component
+import AuthContext from '../../context/AuthProvider';
+
+import axios from '../../api/axios';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/AuthProvider';
+>>>>>>> 514cf21e6f329d628a326a2a61ce77f38512e42f
 
 
+const GETDATA_URL = "/getData";
 
-const DashboardPage = () => {
+const DashboardPage = (e) => {
+
+
+    const [user, setUser] = useState('');
+
+    const auth = useAuth();
+  
+    const navigate = useNavigate();
+
     const [value, onChange] = useState(new Date());
+<<<<<<< HEAD
 
     const columns = [
         { field: 'id', headerName: 'ID', width: 40 },
@@ -73,6 +92,72 @@ const DashboardPage = () => {
             width: 150,
         },
     ];
+=======
+    const gridRef = useRef(); // Optional - for accessing Grid's API
+    
+    const [rowData, setRowData] = useState(); // Set rowData to Array of Objects, one Object per Row
+
+    useEffect(()=>{
+      
+    try {
+
+        const reponse = axios.post(GETDATA_URL, JSON.stringify({
+         month: 3,
+         year: 2022
+        }), {
+          headers: { 'Content-Type': 'application/json' },
+          withCredentials: false
+        }
+        );
+  
+        reponse.then(function (result) {
+          console.log(result);
+          console.log(JSON.stringify(result.data));
+  
+          console.log(result.data.status)
+          if (result.data.status === "success"){      
+            setRowData(result.data.ragEntryList);
+          }
+          else{
+            navigate('/error');
+          }  
+        }).catch(function (error) {
+          if (error.response) {
+            // Request made and server responded
+            console.log(error.response.data);
+            console.log(error.response.status);
+            console.log(error.response.headers);
+          } else if (error.request) {
+            // The request was made but no response was received
+            console.log(error.request);
+            navigate('/error');
+          } else {
+            // Something happened in setting up the request that triggered an Error
+            console.log('Error', error.message);
+          }
+      
+        });
+  
+  
+      } catch (err) {
+        console.log(err);
+        navigate('/');
+      }
+    }, [])
+
+    // Each Column Definition results in one Column.
+    const [columnDefs, setColumnDefs] = useState([
+        { field: 'Program', field: "Program", filter: true, width:150 },
+        { field: 'First Name', field: "firstName", filter: true },
+        { field: 'Last Name', field: "lastName", },
+        { field: 'DOJ-Incedo', field: "DOJIncedo", },
+        { field: 'Current Level', field: "CurrentLevel", },
+        { field: 'Last Promoted On', field: "LastPromotedOn", },
+        { field: 'Current Manager', field: "CurrentManager", },
+        { field: 'RAG', field: "RAG", width:150, cellClassRules: {
+            'rag-green': 'x < 20'}  },
+    ]);
+>>>>>>> 514cf21e6f329d628a326a2a61ce77f38512e42f
 
     const rows = [
         { id: 1, Program: "Insurance", firstName: "Benn", lastName: "Tennyson", DOJIncedo: "4/Jan/2020", CurrentLevel: "3A", LastPromotedOn: "4/April/2022", CurrentManager: "James Sewer", RecordedOn: "24/April/2022", RAG: "" },
