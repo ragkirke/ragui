@@ -81,18 +81,7 @@ const DashboardPage = (e) => {
       }
     }, [])
 
-    // Each Column Definition results in one Column.
-    const [columnDefs, setColumnDefs] = useState([
-        { field: 'Program', field: "Program", filter: true, width:150 },
-        { field: 'First Name', field: "firstName", filter: true },
-        { field: 'Last Name', field: "lastName", },
-        { field: 'DOJ-Incedo', field: "DOJIncedo", },
-        { field: 'Current Level', field: "CurrentLevel", },
-        { field: 'Last Promoted On', field: "LastPromotedOn", },
-        { field: 'Current Manager', field: "CurrentManager", },
-        { field: 'RAG', field: "RAG", width:150, cellClassRules: {
-            'rag-green': 'x < 20'}  },
-    ]);
+ 
 
     const columns = [
         { field: 'id', headerName: 'ID', width: 40 },
