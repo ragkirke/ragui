@@ -41,3 +41,6 @@
 .DashboardMainDiv{
   width: 100%;
 }
+.react-date-picker__inputGroup__divider{
+  color: white;
+}
