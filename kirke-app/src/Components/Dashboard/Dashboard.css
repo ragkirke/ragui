@@ -44,3 +44,7 @@
 .react-date-picker__inputGroup__divider{
   color: white;
 }
+.css-1t1j96h-MuiPaper-root-MuiDialog-paper{
+  max-width: 1000px !important;
+  width: 1000px !important;
+}
